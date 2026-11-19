@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusPulse — AI & Programming Research Site (IS218-003)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --accent: #0f766e;
+      --accent-soft: #f0fdfa;
+      --warn: #b45309;
+      --warn-soft: #fffbeb;
+      --radius: 12px;
+      --max: 1020px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    header {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid #1e293b;
+    }
+    .nav-wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .brand { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+    .brand span { color: #60a5fa; }
+    nav { display: flex; flex-wrap: wrap; gap: 0.9rem; font-size: 0.88rem; }
+    nav a { color: #cbd5e1; text-decoration: none; }
+    nav a:hover { color: #ffffff; text-decoration: underline; }
+    nav a.cross-link {
+      background: #1e3a8a;
+      color: #dbeafe;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.75rem;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+    h1 { margin: 0 0 0.6rem; font-size: 2rem; line-height: 1.2; }
+    h2 {
+      margin: 2.25rem 0 0.85rem;
+      font-size: 1.35rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+    h3 { margin: 1.1rem 0 0.45rem; font-size: 1.05rem; }
+    p { margin: 0 0 0.85rem; }
+    .muted { color: var(--muted); font-size: 0.94rem; }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .callout {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.2rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1rem 0 1.5rem;
+    }
+    .callout-warn {
+      background: var(--warn-soft);
+      border-left-color: var(--warn);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+    }
+    .card.chosen {
+      border: 2px solid var(--primary);
+      background: #fcfdff;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+    .badge-planned { background: #fef3c7; color: #92400e; }
+    .badge-attempted { background: #e0e7ff; color: #3730a3; }
+    .badge-observed { background: #dcfce7; color: #166534; }
+    .badge-chosen { background: var(--primary); color: #ffffff; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      padding: 0.75rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { background: #f1f5f9; font-weight: 700; }
+    tr:last-child td { border-bottom: none; }
+    code {
+      background: #f1f5f9;
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    ul, ol { margin: 0.4rem 0 0.9rem; padding-left: 1.25rem; }
+    li { margin-bottom: 0.35rem; }
+    a { color: var(--primary); }
+    .diagram-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <div class="brand">IS218-003 <span>FocusPulse</span> Research &amp; SPEC</div>
+      <nav aria-label="Primary navigation">
+        <a href="#question">Question</a>
+        <a href="#concepts">Concepts</a>
+        <a href="#spec">Review 2 SPEC</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#checklist">6-Point Plan</a>
+        <a href="#sources">Sources</a>
+        <a href="#peer-review">Peer Review</a>
+        <a class="cross-link" href="https://modrilexx.github.io/is218-portfolio/">Career Research Site &rarr;</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">IS218-003 &bull; Creative Project &bull; Review 1 Plan + Review 2 SPEC</div>
+      <h1>FocusPulse: Bounded Study &amp; Sprint Analytics Logger</h1>
+      <p class="muted">
+        Individual AI/programming research site and living project specification by <strong>Michael Moudatsos</strong>
+        (NJIT, Business &amp; Information Systems). This site documents architectural research, design tradeoffs,
+        and the Review 2 SPEC before implementation.
+      </p>
+      <div class="meta-row">
+        <span><strong>Status:</strong> Plan &amp; SPEC Checkpoint (No working app required for Nov 19)</span>
+        <span><strong>Last Updated:</strong> November 19, 2026</span>
+        <span><strong>Cross-Link:</strong> <a href="https://modrilexx.github.io/is218-portfolio/">Career Research Site (Portfolio Plan)</a></span>
+      </div>
+    </section>
+
+    <div class="callout callout-warn">
+      <strong>Honest Status Label (Nov 19 Checkpoint):</strong> Application code and automated tests are
+      <span class="badge badge-planned">Planned</span>. No runtime checks have been executed yet. All planned
+      verification steps are explicitly labeled below so observed results are never confused with future tests.
+    </div>
+
+    <h2 id="question">1. Research Question, Audience &amp; Epistemic Boundaries</h2>
+    <p>
+      <strong>Research Question:</strong> How can a solo student build a secure, testable, bounded full-stack web
+      application (account access &rarr; useful interaction &rarr; saved record &rarr; private dashboard &rarr; account
+      maintenance) using Python, Flask, and SQLite while testing whether the Strategy design pattern improves
+      maintainability over a simpler procedural function?
+    </p>
+    <p>
+      <strong>Target Audience:</strong> College students and junior analysts who want a lightweight, private way to
+      log focused study/work sprints (duration, course/project tag, focus rating) and review personal productivity
+      trends without bloated subscription apps.
+    </p>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Verified Facts</h3>
+        <ul>
+          <li>Flask supports modular request-scoped relational database connections and server-side session workflows (<a href="https://flask.palletsprojects.com/en/stable/patterns/" target="_blank" rel="noopener">Flask Docs</a>).</li>
+          <li>SQLite stores an entire relational database in a single file and is officially suited for low-to-medium traffic apps and Python data analysis (<a href="https://www.sqlite.org/whentouse.html" target="_blank" rel="noopener">SQLite.org</a>).</li>
+          <li>OWASP recommends strong password hashing, generic login error messages, and secure session handling (<a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP Auth</a>).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Interpretations</h3>
+        <ul>
+          <li>A bounded study/sprint logger fits a Business &amp; Information Systems + Data Analytics focus better than a browser game because saved records naturally feed summary analytics.</li>
+          <li>Using SQLite removes external database hosting complexity during early slices while keeping real SQL queries and schema constraints.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Assumptions (To Test Later)</h3>
+        <ul>
+          <li>Students will log sprints in under 20 seconds if the form only asks for title, duration, tag, and 1&ndash;5 focus rating.</li>
+          <li>Multiple scoring formulas (simple streak vs. weighted focus score) will justify testing a Strategy pattern; if not, a plain function will win.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="concepts">2. Comparing Two Bounded Creative Concepts</h2>
+    <div class="grid-2">
+      <div class="card chosen">
+        <span class="badge badge-chosen">Chosen Concept</span>
+        <h3>Option A: FocusPulse (Bounded Non-Game App)</h3>
+        <p>
+          A private study and project sprint logger where authenticated users record bounded work sessions
+          (15&ndash;180 minutes), categorize them by course/topic, and view weekly totals and focus scores on a
+          private analytics dashboard.
+        </p>
+        <ul>
+          <li><strong>Workflow Promise:</strong> Sign up / sign in &rarr; Log a focus sprint &rarr; Persist validated sprint record in SQLite &rarr; Inspect private history &amp; summary metrics &rarr; Update display name / password or delete account.</li>
+          <li><strong>Why Chosen:</strong> Directly showcases SQL aggregation, server-side validation, and analytics thinking relevant to Data Analytics with Applied AI roles.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="badge badge-attempted">Alternative Considered</span>
+        <h3>Option B: DeckDuel (Bounded Trivia Game)</h3>
+        <p>
+          A timed 5-question browser quiz game where users log in, play a short round, save high scores, and view
+          their personal score history.
+        </p>
+        <ul>
+          <li><strong>Tradeoff:</strong> Fun interaction, but requires authoring/curating a question bank and focuses more on game-state UI than on structured data-record analytics.</li>
+          <li><strong>Decision:</strong> Declined in favor of FocusPulse to keep scope tightly aligned with data analytics and clean server-side CRUD + aggregation.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="spec">3. Review 2 SPEC — What I Chose to Build &amp; Planned Checks</h2>
+    <div class="callout">
+      <strong>Chosen Build Scope (Review 2 SPEC):</strong> Build <strong>FocusPulse</strong> with
+      <strong>Python 3.12 + Flask + SQLite + Jinja2 + pytest + Ruff</strong>. The first working slice implements
+      server-side registration/login, logging a single validated sprint record, rendering the user's private
+      sprint history + summary metrics, and signing out.
+    </div>
+
+    <h3>Five Prioritized User Stories &amp; Acceptance Criteria</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Story</th>
+          <th>Acceptance Criteria</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>US-1</strong></td>
+          <td>As a student, I can register and sign in with a unique email and password so my study logs stay private.</td>
+          <td>Passwords hashed with Werkzeug/scrypt; duplicate emails rejected; session cookie set with <code>HttpOnly</code> and <code>SameSite=Lax</code>; sign-out clears session.</td>
+          <td>P1 (Slice 1)</td>
+        </tr>
+        <tr>
+          <td><strong>US-2</strong></td>
+          <td>As a signed-in user, I can log a bounded focus sprint (topic, duration 5&ndash;240 min, focus score 1&ndash;5) so I can track my work.</td>
+          <td>Server validates all bounds (rejects 0, negative, or &gt;240 min); valid submission inserts one row tied to <code>session["user_id"]</code> and redirects to dashboard.</td>
+          <td>P1 (Slice 1)</td>
+        </tr>
+        <tr>
+          <td><strong>US-3</strong></td>
+          <td>As a signed-in user, I can view my private sprint history and summary dashboard (total minutes, average focus, productivity score).</td>
+          <td>Queries filter strictly by <code>user_id</code>; unauthenticated requests redirect to login; another user's records are never visible.</td>
+          <td>P1 (Slice 1)</td>
+        </tr>
+        <tr>
+          <td><strong>US-4</strong></td>
+          <td>As a signed-in user, I can switch between two productivity scoring views (Simple Total vs. Focus-Weighted Score) to compare my habits.</td>
+          <td>Uses interchangeable scoring strategies (pattern experiment) and recalculates dashboard metric deterministically from saved SQLite rows.</td>
+          <td>P2 (Slice 2)</td>
+        </tr>
+        <tr>
+          <td><strong>US-5</strong></td>
+          <td>As a signed-in user, I can update my display name or password and delete a mistaken sprint entry.</td>
+          <td>Password update verifies current password first; delete checks record ownership (<code>user_id</code> match) before deleting.</td>
+          <td>P2 (Slice 2)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Uncertain Creative Experiment: Strategy Pattern vs. Simple Function</h3>
+    <div class="card">
+      <p>
+        <strong>Hypothesis:</strong> Encapsulating sprint scoring logic behind a
+        <a href="https://refactoring.guru/design-patterns/strategy" target="_blank" rel="noopener">Strategy pattern</a>
+        (<code>ScoringStrategy</code> protocol with <code>SimpleMinutesStrategy</code> and <code>WeightedFocusStrategy</code>)
+        will make adding new analytics formulas cleaner and easier to unit-test than a single conditional
+        <code>if/elif</code> function.
+      </p>
+      <p>
+        <strong>Uncertainty &amp; Honest Exit Criteria:</strong> With only 2 scoring modes, a class hierarchy might
+        add boilerplate without real payoff. During Slice 2, I will implement both side-by-side in a branch, compare
+        line count, readability, and test clarity, and keep the simpler approach if the pattern feels forced.
+        Status: <span class="badge badge-planned">Planned</span>.
+      </p>
+    </div>
+
+    <h3>Named Planned Checks (Required for Review 2)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Check Name</th>
+          <th>What It Verifies</th>
+          <th>Planned Command / Tool</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Auth &amp; Ownership Isolation Check</strong></td>
+          <td>User A logs a sprint, signs out; User B signs in and cannot view or delete User A's sprint record (returns 403/404).</td>
+          <td><code>pytest tests/test_auth_isolation.py</code></td>
+          <td><span class="badge badge-planned">Planned</span></td>
+        </tr>
+        <tr>
+          <td><strong>Sprint Boundary Validation Check</strong></td>
+          <td>Rejects duration = 0, duration = 241, and focus_rating = 6; accepts duration = 25, focus_rating = 4 and persists 1 SQLite row.</td>
+          <td><code>pytest tests/test_sprint_rules.py</code></td>
+          <td><span class="badge badge-planned">Planned</span></td>
+        </tr>
+        <tr>
+          <td><strong>Scoring Strategy Parity Check</strong></td>
+          <td>Both Strategy classes and baseline procedural function return identical scores on fixed fixture data.</td>
+          <td><code>pytest tests/test_scoring_strategies.py</code></td>
+          <td><span class="badge badge-planned">Planned</span></td>
+        </tr>
+        <tr>
+          <td><strong>Lint &amp; Format Gate</strong></td>
+          <td>Zero lint errors or unformatted Python files before merging.</td>
+          <td><code>ruff check . &amp;&amp; ruff format --check .</code></td>
+          <td><span class="badge badge-planned">Planned</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="architecture">4. Technical Architecture Sketch &amp; Data Model</h2>
+    <div class="diagram-box" role="img" aria-label="FocusPulse architecture diagram showing Browser connecting to Flask Routes, Service Layer, Strategy Scoring Module, and SQLite Database">
+      <svg viewBox="0 0 860 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="max-width:860px;display:block;margin:0 auto;">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" />
+          </marker>
+        </defs>
+        <!-- Browser -->
+        <rect x="15" y="55" width="150" height="90" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2" />
+        <text x="90" y="92" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#0f172a">Browser UI</text>
+        <text x="90" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Jinja2 HTML + CSS</text>
+        <text x="90" y="130" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Session Cookie</text>
+
+        <!-- Flask Routes -->
+        <rect x="220" y="55" width="170" height="90" rx="10" fill="#f0fdfa" stroke="#0f766e" stroke-width="2" />
+        <text x="305" y="90" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#0f172a">Flask Blueprints</text>
+        <text x="305" y="110" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">auth_routes.py</text>
+        <text x="305" y="126" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">sprint_routes.py</text>
+
+        <!-- Service + Strategy -->
+        <rect x="445" y="20" width="185" height="75" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="2" />
+        <text x="537" y="50" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Validation &amp; Services</text>
+        <text x="537" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">auth_service / sprint_service</text>
+
+        <rect x="445" y="115" width="185" height="75" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2" />
+        <text x="537" y="145" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Scoring Experiment</text>
+        <text x="537" y="165" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">Strategy vs. Simple Function</text>
+
+        <!-- SQLite -->
+        <rect x="685" y="55" width="160" height="90" rx="10" fill="#f1f5f9" stroke="#334155" stroke-width="2" />
+        <text x="765" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#0f172a">SQLite DB</text>
+        <text x="765" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">users (id, email, hash)</text>
+        <text x="765" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#475569">sprints (id, user_id, ...)</text>
+
+        <!-- Arrows -->
+        <line x1="165" y1="100" x2="218" y2="100" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="390" y1="82" x2="443" y2="58" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="390" y1="118" x2="443" y2="148" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="630" y1="58" x2="683" y2="85" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="630" y1="148" x2="683" y2="115" stroke="#475569" stroke-width="2" marker-end="url(#arrow)" />
+      </svg>
+    </div>
+
+    <h2 id="checklist">5. Six-Point Planning Checklist (Document Before You Build)</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>1. Agile Work Plan</h3>
+        <p><strong>In Scope:</strong> Email/password auth, bounded sprint logger, private history &amp; KPI dashboard, scoring strategy toggle, profile/password update.</p>
+        <p><strong>Out of Scope:</strong> Social leaderboards, OAuth third-party login, real-time Pomodoro WebSockets, mobile native app.</p>
+        <p><strong>Milestones:</strong> M1 Plan/SPEC (Nov 19) &rarr; M2 Slice 1 Auth + Log + Dashboard &rarr; M3 Slice 2 Strategy Experiment + Account Maintenance + Peer Retry.</p>
+      </div>
+      <div class="card">
+        <h3>2. Technical Architecture &amp; Tradeoffs</h3>
+        <p><strong>Chosen Stack:</strong> Python + Flask + SQLite + Jinja2 (free local dev, zero DB server setup, strong Python analytics alignment).</p>
+        <p><strong>Alternative Compared:</strong> Node.js/Express + PostgreSQL. Rejected for this bounded solo project because Postgres provisioning adds deployment overhead not needed for low-concurrency course workloads (<a href="https://www.sqlite.org/whentouse.html" target="_blank" rel="noopener">SQLite.org</a>).</p>
+        <p><strong>Security:</strong> Parameterized SQL queries, salted password hashes, CSRF tokens on POST forms, <code>HttpOnly</code> cookies.</p>
+      </div>
+      <div class="card">
+        <h3>3. Code Architecture &amp; SOLID</h3>
+        <ul>
+          <li><strong>Single Responsibility:</strong> Route handlers only parse HTTP/render templates; <code>services/</code> owns business rules; <code>repositories/</code> owns SQL.</li>
+          <li><strong>Open/Closed &amp; Dependency Inversion:</strong> Dashboard service depends on a <code>ScoringStrategy</code> interface rather than concrete scoring classes.</li>
+          <li><strong>Simplicity Guardrail:</strong> No Factory/Observer/Singleton patterns—only one targeted Strategy experiment.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>4. Efficient Testing Strategy</h3>
+        <ul>
+          <li><strong>Unit tests (fast, local + CI):</strong> Validation bounds (0, 5, 240, 241 min) and scoring formulas via <a href="https://docs.pytest.org/en/stable/contents.html" target="_blank" rel="noopener">pytest</a>.</li>
+          <li><strong>Integration tests (Flask test client + temp SQLite):</strong> Auth flow, session cookies, and cross-user isolation.</li>
+          <li><strong>End-to-End (1–2 smoke paths):</strong> Sign up &rarr; log sprint &rarr; verify dashboard total &rarr; sign out.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>5. Code-Quality Checks</h3>
+        <p>Use <a href="https://docs.astral.sh/ruff/" target="_blank" rel="noopener">Ruff</a> for fast linting and formatting (<code>ruff check .</code> and <code>ruff format --check .</code>) on every commit locally and in GitHub Actions CI. Pull requests will not merge until lint and pytest pass.</p>
+      </div>
+      <div class="card">
+        <h3>6. Build &amp; Review Sequence</h3>
+        <ol>
+          <li>Initialize Flask app factory + SQLite schema + pytest fixture.</li>
+          <li>Implement US-1 (auth) + US-2 (sprint log) + US-3 (dashboard) as Slice 1.</li>
+          <li>Run peer review on Slice 1, log GitHub Issues, implement Slice 2 (US-4 Strategy experiment + US-5 account maintenance).</li>
+        </ol>
+      </div>
+    </div>
+
+    <h2 id="sources">6. Verified Original Sources &amp; AI Assistance Disclosure</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Date Checked</th>
+          <th>Relevant Evidence Used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://flask.palletsprojects.com/en/stable/patterns/" target="_blank" rel="noopener">Patterns for Flask — Flask Documentation</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Documents request-scoped relational DB connections and authentication patterns in Flask.</td>
+        </tr>
+        <tr>
+          <td><a href="https://www.sqlite.org/whentouse.html" target="_blank" rel="noopener">Appropriate Uses For SQLite — SQLite.org</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Confirms SQLite's single-file reliability and strong fit with Python for data analysis and bounded web apps.</td>
+        </tr>
+        <tr>
+          <td><a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" target="_blank" rel="noopener">Authentication Cheat Sheet — OWASP</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Guides password hashing, generic auth error responses, and session protection requirements.</td>
+        </tr>
+        <tr>
+          <td><a href="https://refactoring.guru/design-patterns/strategy" target="_blank" rel="noopener">Strategy Design Pattern — Refactoring.Guru</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Defines isolating interchangeable algorithms behind a common interface to replace conditional branches.</td>
+        </tr>
+        <tr>
+          <td><a href="https://docs.pytest.org/en/stable/contents.html" target="_blank" rel="noopener">pytest Documentation</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Fixtures and temporary directories for isolated Flask + SQLite unit and integration testing.</td>
+        </tr>
+        <tr>
+          <td><a href="https://docs.astral.sh/ruff/" target="_blank" rel="noopener">Ruff Documentation — Astral</a></td>
+          <td>Nov 19, 2026</td>
+          <td>Single fast linter and formatter for Python CI quality gates.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="muted">
+      <strong>AI Assistance Disclosure:</strong> Gemini assisted in organizing this static HTML site, structuring the
+      6-point planning checklist, and drafting user story acceptance criteria. All external documentation URLs and
+      claims were verified on November 19, 2026, and the concept selection, scope bounds, and tradeoffs were reviewed
+      for alignment with IS218-003 requirements.
+    </p>
+
+    <h2 id="peer-review">7. Peer Review &amp; GitHub Issues Tracker</h2>
+    <p>
+      Per course policy, AI critique does not replace a real classmate. After publishing this site to GitHub Pages,
+      present it to a partner, ask them to open a source, explain one choice, and flag one assumption or confusing
+      part, then log their feedback below:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>GitHub Issue</th>
+          <th>Reviewer (Classmate)</th>
+          <th>Feedback Summary</th>
+          <th>Decision &amp; Reason</th>
+          <th>Change &amp; Reviewer Retry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>#1</code> <em>[Link after peer review]</em></td>
+          <td><em>[Classmate Name]</em></td>
+          <td><em>[Record specific question/assumption flagged]</em></td>
+          <td><span class="badge badge-planned">Pending Peer Session</span></td>
+          <td><em>[Link commit + reviewer retry confirmation]</em></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      <p>
+        <strong>FocusPulse AI/Programming Research Site</strong> &bull; Michael Moudatsos &bull; IS218-003 (Fall 2026) &bull;
+        Cross-link: <a href="https://modrilexx.github.io/is218-portfolio/">Career Research Site (Portfolio Plan)</a>
+      </p>
+    </footer>
+  </main>
+</body>
+</html>
